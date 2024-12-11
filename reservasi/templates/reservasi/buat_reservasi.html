@@ -1,0 +1,51 @@
+{% extends "base_reservasi.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Buat Reservasi - Central Cool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Buat Reservasi Baru</h2>
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-check"></i> Buat Reservasi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalInput = document.querySelector('input[name="tanggal"]');
+    
+    tanggalInput.addEventListener('change', function() {
+        const selectedDate = new Date(this.value);
+        if (selectedDate.getDay() === 0) { // 0 adalah hari Minggu
+            alert('Mohon maaf, bengkel tutup di hari Minggu. Silakan pilih hari Senin sampai Sabtu untuk reservasi.');
+            this.value = ''; // Reset input
+        }
+    });
+});
+</script>
+{% endblock %}
